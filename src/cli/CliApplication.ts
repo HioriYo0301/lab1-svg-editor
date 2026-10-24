@@ -14,12 +14,24 @@ import { GroupCommand } from "../commands/GroupCommand.js";
 import { UngroupCommand } from "../commands/UngroupCommand.js";
 import { AddToCommand } from "../commands/AddToCommand.js";
 import { History } from "../history/History.js";
+import { FileSystem } from "../io/FileSystem.js";
+import { NodeFileSystem } from "../io/NodeFileSystem.js";
+import { SvgReader } from "../parser/SvgReader.js";
+import { SvgWriter } from "../serializer/SvgWriter.js";
 
 export class CliApplication {
   private document: SvgDocument | null = null;
   private readonly parser = new CommandParser();
   private readonly factory = new ShapeFactory();
   private readonly history = new History();
+  private currentPath: string | undefined;
+  private readonly reader: SvgReader;
+  private readonly writer: SvgWriter;
+
+  public constructor(private readonly fileSystem: FileSystem = new NodeFileSystem(), reader = new SvgReader(), writer = new SvgWriter()) {
+    this.reader = reader;
+    this.writer = writer;
+  }
 
   public handleLine(line: string): string | null {
     const command = this.parser.parse(line);
@@ -37,6 +49,8 @@ export class CliApplication {
   private execute(command: ParsedCommand): string {
     switch (command.name) {
       case "init": return this.init(command.args);
+      case "read": return this.read(command.args[0]);
+      case "save": return this.save(command.args[0]);
       case "create": return this.create(command.args);
       case "tree": return this.tree(command.args);
       case "show": return this.show(command.args);
@@ -61,8 +75,34 @@ export class CliApplication {
     const width = args[0] === undefined ? 800 : this.number(args[0], "width");
     const height = args[1] === undefined ? 600 : this.number(args[1], "height");
     this.document = new SvgDocument(width, height);
+    this.currentPath = undefined;
     this.history.markIoBoundary();
     return `canvas ${width}x${height} created`;
+  }
+
+  private read(path: string): string {
+    let content: string;
+    try { content = this.fileSystem.readFile(path); }
+    catch { throw new CommandError(`cannot read file: ${path}`); }
+    let result;
+    try { result = this.reader.read(content); }
+    catch (error) { throw new CommandError(`cannot read file: ${path}`); }
+    this.document = result.document;
+    this.currentPath = path;
+    this.history.markIoBoundary();
+    const warningText = result.warnings.length === 0 ? [] : [...result.warnings];
+    return [...warningText, `read ${path} (${result.document.elementCount} elements)`].join("\n");
+  }
+
+  private save(path: string | undefined): string {
+    const document = this.requireDocument();
+    const target = path ?? this.currentPath;
+    if (target === undefined) throw new CommandError("cannot write file: no path specified");
+    try { this.fileSystem.writeFile(target, this.writer.write(document)); }
+    catch { throw new CommandError(`cannot write file: ${target}`); }
+    this.currentPath = target;
+    this.history.markIoBoundary();
+    return `saved to ${target} (${document.elementCount} elements)`;
   }
 
   private create(args: readonly string[]): string {
