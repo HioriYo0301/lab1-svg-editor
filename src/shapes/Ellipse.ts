@@ -16,12 +16,21 @@ export class Ellipse extends Shape {
   protected moveGeometry(dx: number, dy: number): void { this.centerX += dx; this.centerY += dy; }
   protected scaleGeometry(factor: number): void { this.centerX *= factor; this.centerY *= factor; this.radiusX *= factor; this.radiusY *= factor; }
   protected setGeometryAttribute(attribute: string, value: string): void {
-    const parsed = this.parseFiniteNumber(value, attribute);
     switch (attribute) {
-      case "cx": this.centerX = parsed; break;
-      case "cy": this.centerY = parsed; break;
-      case "rx": if (parsed < 0) throw new ShapeError("rx must not be negative"); this.radiusX = parsed; break;
-      case "ry": if (parsed < 0) throw new ShapeError("ry must not be negative"); this.radiusY = parsed; break;
+      case "cx": this.centerX = this.parseFiniteNumber(value, attribute); break;
+      case "cy": this.centerY = this.parseFiniteNumber(value, attribute); break;
+      case "rx": {
+        const parsed = this.parseFiniteNumber(value, attribute);
+        if (parsed < 0) throw new ShapeError("rx must not be negative");
+        this.radiusX = parsed;
+        break;
+      }
+      case "ry": {
+        const parsed = this.parseFiniteNumber(value, attribute);
+        if (parsed < 0) throw new ShapeError("ry must not be negative");
+        this.radiusY = parsed;
+        break;
+      }
       default: throw new ShapeError(`unknown attribute: ${attribute}`);
     }
   }

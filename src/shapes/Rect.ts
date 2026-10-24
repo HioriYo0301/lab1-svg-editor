@@ -18,13 +18,21 @@ export class Rect extends Shape {
   protected moveGeometry(dx: number, dy: number): void { this.rectX += dx; this.rectY += dy; }
   protected scaleGeometry(factor: number): void { this.rectX *= factor; this.rectY *= factor; this.rectWidth *= factor; this.rectHeight *= factor; }
   protected setGeometryAttribute(attribute: string, value: string): void {
-    const parsed = this.parseFiniteNumber(value, attribute);
-    if ((attribute === "width" || attribute === "height") && parsed < 0) throw new ShapeError(`${attribute} must not be negative`);
     switch (attribute) {
-      case "x": this.rectX = parsed; break;
-      case "y": this.rectY = parsed; break;
-      case "width": this.rectWidth = parsed; break;
-      case "height": this.rectHeight = parsed; break;
+      case "x": this.rectX = this.parseFiniteNumber(value, attribute); break;
+      case "y": this.rectY = this.parseFiniteNumber(value, attribute); break;
+      case "width": {
+        const parsed = this.parseFiniteNumber(value, attribute);
+        if (parsed < 0) throw new ShapeError("width must not be negative");
+        this.rectWidth = parsed;
+        break;
+      }
+      case "height": {
+        const parsed = this.parseFiniteNumber(value, attribute);
+        if (parsed < 0) throw new ShapeError("height must not be negative");
+        this.rectHeight = parsed;
+        break;
+      }
       default: throw new ShapeError(`unknown attribute: ${attribute}`);
     }
   }

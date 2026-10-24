@@ -69,6 +69,32 @@ export class SvgDocument implements Iterable<Shape> {
     return { shape, parent, index };
   }
 
+  public siblingCount(shape: Shape): number {
+    if (!this.shapesById.has(shape.id) || this.shapesById.get(shape.id) !== shape) {
+      throw new DocumentError(`no such shape: ${shape.id}`);
+    }
+    return shape.parent === null ? this.rootShapes.length : shape.parent.size;
+  }
+
+  public reorder(shape: Shape, targetIndex: number): number {
+    if (!this.shapesById.has(shape.id) || this.shapesById.get(shape.id) !== shape) {
+      throw new DocumentError(`no such shape: ${shape.id}`);
+    }
+    const parent = shape.parent;
+    const siblings = parent === null ? this.rootShapes : [...parent];
+    const oldIndex = siblings.indexOf(shape);
+    this.validateIndex(targetIndex, siblings.length - 1);
+    if (oldIndex === targetIndex) return oldIndex;
+    if (parent === null) {
+      this.rootShapes.splice(oldIndex, 1);
+      this.rootShapes.splice(targetIndex, 0, shape);
+    } else {
+      parent.removeChild(shape);
+      parent.addChild(shape, targetIndex);
+    }
+    return oldIndex;
+  }
+
   public restore(placement: ShapePlacement): void {
     this.add(placement.shape, placement.parent, placement.index);
   }

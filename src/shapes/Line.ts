@@ -15,12 +15,11 @@ export class Line extends Shape {
   protected moveGeometry(dx: number, dy: number): void { this.startX += dx; this.startY += dy; this.endX += dx; this.endY += dy; }
   protected scaleGeometry(factor: number): void { this.startX *= factor; this.startY *= factor; this.endX *= factor; this.endY *= factor; }
   protected setGeometryAttribute(attribute: string, value: string): void {
-    const parsed = this.parseFiniteNumber(value, attribute);
     switch (attribute) {
-      case "x1": this.startX = parsed; break;
-      case "y1": this.startY = parsed; break;
-      case "x2": this.endX = parsed; break;
-      case "y2": this.endY = parsed; break;
+      case "x1": this.startX = this.parseFiniteNumber(value, attribute); break;
+      case "y1": this.startY = this.parseFiniteNumber(value, attribute); break;
+      case "x2": this.endX = this.parseFiniteNumber(value, attribute); break;
+      case "y2": this.endY = this.parseFiniteNumber(value, attribute); break;
       default: throw new ShapeError(`unknown attribute: ${attribute}`);
     }
   }

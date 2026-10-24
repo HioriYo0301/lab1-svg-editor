@@ -15,10 +15,9 @@ export class Text extends Shape {
   protected scaleGeometry(factor: number): void { this.textX *= factor; this.textY *= factor; }
   protected setGeometryAttribute(attribute: string, value: string): void {
     if (attribute === "text") { this.content = value; return; }
-    const parsed = this.parseFiniteNumber(value, attribute);
     switch (attribute) {
-      case "x": this.textX = parsed; break;
-      case "y": this.textY = parsed; break;
+      case "x": this.textX = this.parseFiniteNumber(value, attribute); break;
+      case "y": this.textY = this.parseFiniteNumber(value, attribute); break;
       default: throw new ShapeError(`unknown attribute: ${attribute}`);
     }
   }

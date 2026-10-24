@@ -15,11 +15,15 @@ export class Circle extends Shape {
   protected moveGeometry(dx: number, dy: number): void { this.centerX += dx; this.centerY += dy; }
   protected scaleGeometry(factor: number): void { this.centerX *= factor; this.centerY *= factor; this.radius *= factor; }
   protected setGeometryAttribute(attribute: string, value: string): void {
-    const parsed = this.parseFiniteNumber(value, attribute);
     switch (attribute) {
-      case "cx": this.centerX = parsed; break;
-      case "cy": this.centerY = parsed; break;
-      case "r": if (parsed < 0) throw new ShapeError("r must not be negative"); this.radius = parsed; break;
+      case "cx": this.centerX = this.parseFiniteNumber(value, attribute); break;
+      case "cy": this.centerY = this.parseFiniteNumber(value, attribute); break;
+      case "r": {
+        const parsed = this.parseFiniteNumber(value, attribute);
+        if (parsed < 0) throw new ShapeError("r must not be negative");
+        this.radius = parsed;
+        break;
+      }
       default: throw new ShapeError(`unknown attribute: ${attribute}`);
     }
   }

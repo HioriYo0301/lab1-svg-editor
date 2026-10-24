@@ -4,6 +4,12 @@ import { ShapeFactory } from "../shapes/ShapeFactory.js";
 import { Group } from "../shapes/Group.js";
 import { Shape } from "../shapes/Shape.js";
 import { SvgDocument } from "../document/SvgDocument.js";
+import { Command } from "../commands/Command.js";
+import { MoveCommand } from "../commands/MoveCommand.js";
+import { ScaleCommand } from "../commands/ScaleCommand.js";
+import { SetAttributeCommand } from "../commands/SetAttributeCommand.js";
+import { DeleteCommand } from "../commands/DeleteCommand.js";
+import { ZOrderCommand } from "../commands/ZOrderCommand.js";
 
 export class CliApplication {
   private document: SvgDocument | null = null;
@@ -31,6 +37,12 @@ export class CliApplication {
       case "show": return this.show(command.args);
       case "help": return this.help();
       case "canvas": return this.canvas(command.args);
+      case "move": return this.executeEditing(new MoveCommand(this.requireDocument(), command.args[0], this.number(command.args[1], "dx"), this.number(command.args[2], "dy")));
+      case "scale": return this.executeEditing(new ScaleCommand(this.requireDocument(), command.args[0], this.number(command.args[1], "factor")));
+      case "set": return this.executeEditing(new SetAttributeCommand(this.requireDocument(), command.args[0], command.args[1], command.args[2]));
+      case "delete": return this.executeEditing(new DeleteCommand(this.requireDocument(), command.args[0]));
+      case "front": return this.executeEditing(new ZOrderCommand(this.requireDocument(), command.args[0], "front"));
+      case "back": return this.executeEditing(new ZOrderCommand(this.requireDocument(), command.args[0], "back"));
       default: throw new CommandError(`command not implemented yet: ${command.name}`);
     }
   }
@@ -118,5 +130,9 @@ export class CliApplication {
     const parsed = Number(value);
     if (!Number.isFinite(parsed)) throw new CommandError(`${name} must be a finite number`);
     return parsed;
+  }
+
+  private executeEditing(command: Command): string {
+    return command.execute();
   }
 }
