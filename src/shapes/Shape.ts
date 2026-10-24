@@ -1,9 +1,10 @@
 import { ShapeError } from "./ShapeError.js";
+import type { Group } from "./Group.js";
 
 export type CommonAttribute = "fill" | "stroke" | "stroke-width";
 
 export abstract class Shape {
-  private parentShape: Shape | null = null;
+  private parentShape: Group | null = null;
   private readonly attributes = new Map<CommonAttribute, string>();
 
   protected constructor(private readonly shapeId: string) {
@@ -11,8 +12,8 @@ export abstract class Shape {
   }
 
   public get id(): string { return this.shapeId; }
-  public get parent(): Shape | null { return this.parentShape; }
-  public setParent(parent: Shape | null): void { this.parentShape = parent; }
+  public get parent(): Group | null { return this.parentShape; }
+  public setParent(parent: Group | null): void { this.parentShape = parent; }
   public abstract get type(): string;
 
   public move(dx: number, dy: number): void {
