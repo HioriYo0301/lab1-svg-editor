@@ -13,11 +13,13 @@ import { ZOrderCommand } from "../commands/ZOrderCommand.js";
 import { GroupCommand } from "../commands/GroupCommand.js";
 import { UngroupCommand } from "../commands/UngroupCommand.js";
 import { AddToCommand } from "../commands/AddToCommand.js";
+import { History } from "../history/History.js";
 
 export class CliApplication {
   private document: SvgDocument | null = null;
   private readonly parser = new CommandParser();
   private readonly factory = new ShapeFactory();
+  private readonly history = new History();
 
   public handleLine(line: string): string | null {
     const command = this.parser.parse(line);
@@ -49,6 +51,8 @@ export class CliApplication {
       case "group": return this.executeEditing(new GroupCommand(this.requireDocument(), command.args[0], command.args.slice(1)));
       case "ungroup": return this.executeEditing(new UngroupCommand(this.requireDocument(), command.args[0]));
       case "addto": return this.executeEditing(new AddToCommand(this.requireDocument(), command.args[0], command.args[1]));
+      case "undo": return this.history.undo();
+      case "redo": return this.history.redo();
       default: throw new CommandError(`command not implemented yet: ${command.name}`);
     }
   }
@@ -57,6 +61,7 @@ export class CliApplication {
     const width = args[0] === undefined ? 800 : this.number(args[0], "width");
     const height = args[1] === undefined ? 600 : this.number(args[1], "height");
     this.document = new SvgDocument(width, height);
+    this.history.markIoBoundary();
     return `canvas ${width}x${height} created`;
   }
 
@@ -101,6 +106,7 @@ export class CliApplication {
     const width = this.number(args[0], "width");
     const height = this.number(args[1], "height");
     document.setCanvasSize(width, height);
+    this.history.markIoBoundary();
     return `canvas resized to ${width}x${height}`;
   }
 
@@ -139,6 +145,6 @@ export class CliApplication {
   }
 
   private executeEditing(command: Command): string {
-    return command.execute();
+    return this.history.execute(command);
   }
 }

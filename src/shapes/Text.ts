@@ -21,4 +21,8 @@ export class Text extends Shape {
       default: throw new ShapeError(`unknown attribute: ${attribute}`);
     }
   }
+
+  protected geometryAttributeValue(attribute: string): string | undefined {
+    switch (attribute) { case "x": return String(this.textX); case "y": return String(this.textY); case "text": return this.content; default: return undefined; }
+  }
 }

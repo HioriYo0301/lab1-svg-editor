@@ -36,4 +36,12 @@ export class Rect extends Shape {
       default: throw new ShapeError(`unknown attribute: ${attribute}`);
     }
   }
+
+  protected geometryAttributeValue(attribute: string): string | undefined {
+    switch (attribute) {
+      case "x": return String(this.rectX); case "y": return String(this.rectY);
+      case "width": return String(this.rectWidth); case "height": return String(this.rectHeight);
+      default: return undefined;
+    }
+  }
 }

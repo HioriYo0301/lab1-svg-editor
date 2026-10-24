@@ -23,4 +23,8 @@ export class Line extends Shape {
       default: throw new ShapeError(`unknown attribute: ${attribute}`);
     }
   }
+
+  protected geometryAttributeValue(attribute: string): string | undefined {
+    switch (attribute) { case "x1": return String(this.startX); case "y1": return String(this.startY); case "x2": return String(this.endX); case "y2": return String(this.endY); default: return undefined; }
+  }
 }

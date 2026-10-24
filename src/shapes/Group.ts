@@ -65,6 +65,8 @@ export class Group extends Shape implements Iterable<Shape> {
     throw new ShapeError(`unknown attribute: ${attribute}`);
   }
 
+  protected geometryAttributeValue(_attribute: string): string | undefined { return undefined; }
+
   private isDescendantOf(candidate: Shape): boolean {
     let current: Shape | null = this;
     while (current !== null) {

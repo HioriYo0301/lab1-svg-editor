@@ -8,4 +8,9 @@ export class MoveCommand implements Command {
     shape.move(this.dx, this.dy);
     return `${shape.type}#${shape.id} moved by (${this.dx},${this.dy})`;
   }
+  public undo(): string {
+    const shape = this.document.requireById(this.id);
+    shape.move(-this.dx, -this.dy);
+    return `${shape.type}#${shape.id} moved back by (${-this.dx},${-this.dy})`;
+  }
 }

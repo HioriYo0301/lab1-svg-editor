@@ -34,4 +34,8 @@ export class Ellipse extends Shape {
       default: throw new ShapeError(`unknown attribute: ${attribute}`);
     }
   }
+
+  protected geometryAttributeValue(attribute: string): string | undefined {
+    switch (attribute) { case "cx": return String(this.centerX); case "cy": return String(this.centerY); case "rx": return String(this.radiusX); case "ry": return String(this.radiusY); default: return undefined; }
+  }
 }

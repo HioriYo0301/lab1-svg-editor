@@ -10,4 +10,9 @@ export class DeleteCommand implements Command {
     this.placement = this.document.remove(shape);
     return `${shape.type}#${shape.id} deleted`;
   }
+  public undo(): string {
+    if (this.placement === undefined) throw new Error("delete command has not been executed");
+    this.document.restore(this.placement);
+    return `${this.placement.shape.type}#${this.placement.shape.id} restored`;
+  }
 }

@@ -46,4 +46,48 @@ describe("structure commands", () => {
     expect(app.handleLine("addto inner outer")).toBe("error: cannot add a container into its own descendant");
     expect(app.handleLine("tree")).toContain("g#outer");
   });
+
+  it("undoes and redoes grouping", () => {
+    const app = new CliApplication();
+    app.handleLine("init");
+    app.handleLine("create rect r1 0 0 1 1");
+    app.handleLine("create rect r2 0 0 1 1");
+    app.handleLine("group cluster r1 r2");
+    expect(app.handleLine("undo")).toContain("g#cluster removed");
+    expect(app.handleLine("show r1")).toContain("parent=svg");
+    expect(app.handleLine("redo")).toContain("g#cluster created");
+    expect(app.handleLine("show r1")).toContain("parent=g#cluster");
+  });
+
+  it("undoes deletion and restores a complete subtree", () => {
+    const app = new CliApplication();
+    app.handleLine("init");
+    app.handleLine("create g node");
+    app.handleLine("create rect r1 0 0 10 10 in node");
+    app.handleLine("delete node");
+    expect(app.handleLine("undo")).toContain("g#node restored");
+    expect(app.handleLine("show r1")).toContain("parent=g#node");
+    app.handleLine("redo");
+    expect(app.handleLine("show r1")).toBe("error: no such shape: r1");
+  });
+
+  it("undoes addto and ungroup", () => {
+    const app = new CliApplication();
+    app.handleLine("init");
+    app.handleLine("create g target");
+    app.handleLine("create rect r1 0 0 10 10");
+    app.handleLine("addto target r1");
+    app.handleLine("undo");
+    expect(app.handleLine("show r1")).toContain("parent=svg");
+    app.handleLine("redo");
+    expect(app.handleLine("show r1")).toContain("parent=g#target");
+
+    app.handleLine("create g outer");
+    app.handleLine("create g inner in outer");
+    app.handleLine("create rect nested 0 0 1 1 in inner");
+    app.handleLine("ungroup inner");
+    app.handleLine("undo");
+    expect(app.handleLine("show nested")).toContain("parent=g#inner");
+    expect(app.handleLine("redo")).toContain("ungrouped");
+  });
 });

@@ -49,4 +49,35 @@ describe("editing commands", () => {
     expect(app.handleLine("move r1 invalid 1")).toBe("error: dx must be a finite number");
     expect(app.handleLine("show r1")).toContain("x=0 y=0");
   });
+
+  it("supports undo and redo for editing commands", () => {
+    const app = new CliApplication();
+    app.handleLine("init");
+    app.handleLine("create rect r1 0 0 10 10");
+    app.handleLine("move r1 30 0");
+    expect(app.handleLine("undo")).toContain("moved back");
+    expect(app.handleLine("show r1")).toContain("x=0 y=0");
+    expect(app.handleLine("redo")).toContain("moved by (30,0)");
+    expect(app.handleLine("show r1")).toContain("x=30 y=0");
+  });
+
+  it("clears redo after a new edit", () => {
+    const app = new CliApplication();
+    app.handleLine("init");
+    app.handleLine("create rect r1 0 0 10 10");
+    app.handleLine("move r1 10 0");
+    app.handleLine("undo");
+    app.handleLine("move r1 20 0");
+    expect(app.handleLine("redo")).toBe("error: nothing to redo");
+  });
+
+  it("blocks history after an IO-style document command", () => {
+    const app = new CliApplication();
+    app.handleLine("init");
+    app.handleLine("create rect r1 0 0 10 10");
+    app.handleLine("canvas 400 300");
+    expect(app.handleLine("undo")).toBe("error: undo not allowed after io command");
+    app.handleLine("move r1 1 0");
+    expect(app.handleLine("undo")).toContain("moved back");
+  });
 });

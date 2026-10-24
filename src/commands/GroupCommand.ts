@@ -1,10 +1,13 @@
 import { SvgDocument } from "../document/SvgDocument.js";
+import { ShapePlacement } from "../document/ShapePlacement.js";
 import { Group } from "../shapes/Group.js";
 import { Shape } from "../shapes/Shape.js";
 import { Command } from "./Command.js";
 import { CommandError } from "./CommandError.js";
 
 export class GroupCommand implements Command {
+  private originalPlacements: ShapePlacement[] = [];
+  private createdGroup: Group | undefined;
   public constructor(private readonly document: SvgDocument, private readonly groupId: string, private readonly memberIds: readonly string[]) {}
 
   public execute(): string {
@@ -18,13 +21,26 @@ export class GroupCommand implements Command {
     }
 
     const ordered = [...members].sort((left, right) => this.siblingIndex(left) - this.siblingIndex(right));
+    this.originalPlacements = ordered.map((shape) => ({ shape, parent: shape.parent, index: this.siblingIndex(shape) }));
     const insertionIndex = Math.min(...ordered.map((member) => this.siblingIndex(member)));
     for (const member of [...ordered].reverse()) this.document.remove(member);
 
     const group = new Group(this.groupId);
     for (const member of ordered) group.addChild(member);
     this.document.add(group, parent, insertionIndex);
+    this.createdGroup = group;
     return `g#${group.id} created with ${ordered.length} children`;
+  }
+
+  public undo(): string {
+    if (this.createdGroup === undefined) throw new CommandError("group command has not been executed");
+    const group = this.createdGroup;
+    this.document.remove(group);
+    for (const child of [...group]) group.removeChild(child);
+    for (const placement of this.originalPlacements.sort((left, right) => left.index - right.index)) {
+      this.document.restore(placement);
+    }
+    return `g#${group.id} removed`;
   }
 
   private resolveMembers(): Shape[] {

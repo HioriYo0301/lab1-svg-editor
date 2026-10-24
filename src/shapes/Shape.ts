@@ -46,11 +46,27 @@ export abstract class Shape {
     return this.attributes.get(attribute);
   }
 
+  public getAttributeValue(attribute: string): string | undefined {
+    if (attribute === "fill" || attribute === "stroke" || attribute === "stroke-width") return this.attributes.get(attribute);
+    return this.geometryAttributeValue(attribute);
+  }
+
+  public restoreAttribute(attribute: string, value: string | undefined): void {
+    if (attribute === "fill" || attribute === "stroke" || attribute === "stroke-width") {
+      if (value === undefined) this.attributes.delete(attribute);
+      else this.setAttribute(attribute, value);
+      return;
+    }
+    if (value === undefined) throw new ShapeError(`cannot restore missing geometry attribute: ${attribute}`);
+    this.setGeometryAttribute(attribute, value);
+  }
+
   public abstract toSvg(): string;
   public abstract describe(): string;
   protected abstract moveGeometry(dx: number, dy: number): void;
   protected abstract scaleGeometry(factor: number): void;
   protected abstract setGeometryAttribute(attribute: string, value: string): void;
+  protected abstract geometryAttributeValue(attribute: string): string | undefined;
 
   protected commonAttributes(): string {
     return [...this.attributes.entries()]

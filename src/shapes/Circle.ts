@@ -27,4 +27,8 @@ export class Circle extends Shape {
       default: throw new ShapeError(`unknown attribute: ${attribute}`);
     }
   }
+
+  protected geometryAttributeValue(attribute: string): string | undefined {
+    switch (attribute) { case "cx": return String(this.centerX); case "cy": return String(this.centerY); case "r": return String(this.radius); default: return undefined; }
+  }
 }
