@@ -51,9 +51,7 @@ export class Group extends Shape implements Iterable<Shape> {
     return `<g id="${Shape.escapeXml(this.id)}"${this.commonAttributes()}>${children}</g>`;
   }
 
-  public describe(): string {
-    return `g#${this.id}`;
-  }
+  public describe(): string { return `g#${this.id}${this.commonDescription()}`; }
 
   protected moveGeometry(dx: number, dy: number): void {
     for (const child of this.childShapes) child.move(dx, dy);

@@ -11,7 +11,7 @@ export class Circle extends Shape {
   public get cy(): number { return this.centerY; }
   public get r(): number { return this.radius; }
   public toSvg(): string { return `<circle id="${Shape.escapeXml(this.id)}" cx="${this.centerX}" cy="${this.centerY}" r="${this.radius}"${this.commonAttributes()}/>`; }
-  public describe(): string { return `circle#${this.id} cx=${this.centerX} cy=${this.centerY} r=${this.radius}`; }
+  public describe(): string { return `circle#${this.id} cx=${this.centerX} cy=${this.centerY} r=${this.radius}${this.commonDescription()}`; }
   protected moveGeometry(dx: number, dy: number): void { this.centerX += dx; this.centerY += dy; }
   protected scaleGeometry(factor: number): void { this.centerX *= factor; this.centerY *= factor; this.radius *= factor; }
   protected setGeometryAttribute(attribute: string, value: string): void {

@@ -12,7 +12,7 @@ export class Ellipse extends Shape {
   public get rx(): number { return this.radiusX; }
   public get ry(): number { return this.radiusY; }
   public toSvg(): string { return `<ellipse id="${Shape.escapeXml(this.id)}" cx="${this.centerX}" cy="${this.centerY}" rx="${this.radiusX}" ry="${this.radiusY}"${this.commonAttributes()}/>`; }
-  public describe(): string { return `ellipse#${this.id} cx=${this.centerX} cy=${this.centerY} rx=${this.radiusX} ry=${this.radiusY}`; }
+  public describe(): string { return `ellipse#${this.id} cx=${this.centerX} cy=${this.centerY} rx=${this.radiusX} ry=${this.radiusY}${this.commonDescription()}`; }
   protected moveGeometry(dx: number, dy: number): void { this.centerX += dx; this.centerY += dy; }
   protected scaleGeometry(factor: number): void { this.centerX *= factor; this.centerY *= factor; this.radiusX *= factor; this.radiusY *= factor; }
   protected setGeometryAttribute(attribute: string, value: string): void {

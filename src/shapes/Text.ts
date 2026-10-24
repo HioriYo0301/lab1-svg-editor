@@ -10,7 +10,7 @@ export class Text extends Shape {
   public get y(): number { return this.textY; }
   public get text(): string { return this.content; }
   public toSvg(): string { return `<text id="${Shape.escapeXml(this.id)}" x="${this.textX}" y="${this.textY}"${this.commonAttributes()}>${Shape.escapeXml(this.content)}</text>`; }
-  public describe(): string { return `text#${this.id} (${this.textX},${this.textY}) "${this.content}"`; }
+  public describe(): string { return `text#${this.id} (${this.textX},${this.textY}) "${this.content}"${this.commonDescription()}`; }
   protected moveGeometry(dx: number, dy: number): void { this.textX += dx; this.textY += dy; }
   protected scaleGeometry(factor: number): void { this.textX *= factor; this.textY *= factor; }
   protected setGeometryAttribute(attribute: string, value: string): void {

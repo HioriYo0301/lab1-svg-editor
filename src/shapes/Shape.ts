@@ -58,6 +58,12 @@ export abstract class Shape {
       .join("");
   }
 
+  protected commonDescription(): string {
+    return [...this.attributes.entries()]
+      .map(([name, value]) => ` ${name}=${value}`)
+      .join("");
+  }
+
   protected parseFiniteNumber(value: string, attribute: string): number {
     const parsed = Number(value);
     this.requireFiniteNumber(parsed, attribute);

@@ -11,7 +11,7 @@ export class Line extends Shape {
   public get x2(): number { return this.endX; }
   public get y2(): number { return this.endY; }
   public toSvg(): string { return `<line id="${Shape.escapeXml(this.id)}" x1="${this.startX}" y1="${this.startY}" x2="${this.endX}" y2="${this.endY}"${this.commonAttributes()}/>`; }
-  public describe(): string { return `line#${this.id} (${this.startX},${this.startY}) -> (${this.endX},${this.endY})`; }
+  public describe(): string { return `line#${this.id} (${this.startX},${this.startY}) -> (${this.endX},${this.endY})${this.commonDescription()}`; }
   protected moveGeometry(dx: number, dy: number): void { this.startX += dx; this.startY += dy; this.endX += dx; this.endY += dy; }
   protected scaleGeometry(factor: number): void { this.startX *= factor; this.startY *= factor; this.endX *= factor; this.endY *= factor; }
   protected setGeometryAttribute(attribute: string, value: string): void {

@@ -14,7 +14,7 @@ export class Rect extends Shape {
   public get width(): number { return this.rectWidth; }
   public get height(): number { return this.rectHeight; }
   public toSvg(): string { return `<rect id="${Shape.escapeXml(this.id)}" x="${this.rectX}" y="${this.rectY}" width="${this.rectWidth}" height="${this.rectHeight}"${this.commonAttributes()}/>`; }
-  public describe(): string { return `rect#${this.id} x=${this.rectX} y=${this.rectY} w=${this.rectWidth} h=${this.rectHeight}`; }
+  public describe(): string { return `rect#${this.id} x=${this.rectX} y=${this.rectY} w=${this.rectWidth} h=${this.rectHeight}${this.commonDescription()}`; }
   protected moveGeometry(dx: number, dy: number): void { this.rectX += dx; this.rectY += dy; }
   protected scaleGeometry(factor: number): void { this.rectX *= factor; this.rectY *= factor; this.rectWidth *= factor; this.rectHeight *= factor; }
   protected setGeometryAttribute(attribute: string, value: string): void {
