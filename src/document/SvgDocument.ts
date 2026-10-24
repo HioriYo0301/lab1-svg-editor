@@ -99,6 +99,20 @@ export class SvgDocument implements Iterable<Shape> {
     this.add(placement.shape, placement.parent, placement.index);
   }
 
+  public ungroup(group: Group): number {
+    const parent = group.parent;
+    if (parent === null) throw new DocumentError(`cannot ungroup top-level container: ${group.id}`);
+    const insertionIndex = parent.indexOf(group);
+    const children = [...group];
+    parent.removeChild(group);
+    for (const child of children) {
+      group.removeChild(child);
+      parent.addChild(child, insertionIndex + children.indexOf(child));
+    }
+    this.shapesById.delete(group.id);
+    return children.length;
+  }
+
   public [Symbol.iterator](): Iterator<Shape> {
     return this.rootShapes[Symbol.iterator]();
   }

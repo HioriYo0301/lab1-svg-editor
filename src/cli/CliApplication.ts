@@ -10,6 +10,9 @@ import { ScaleCommand } from "../commands/ScaleCommand.js";
 import { SetAttributeCommand } from "../commands/SetAttributeCommand.js";
 import { DeleteCommand } from "../commands/DeleteCommand.js";
 import { ZOrderCommand } from "../commands/ZOrderCommand.js";
+import { GroupCommand } from "../commands/GroupCommand.js";
+import { UngroupCommand } from "../commands/UngroupCommand.js";
+import { AddToCommand } from "../commands/AddToCommand.js";
 
 export class CliApplication {
   private document: SvgDocument | null = null;
@@ -43,6 +46,9 @@ export class CliApplication {
       case "delete": return this.executeEditing(new DeleteCommand(this.requireDocument(), command.args[0]));
       case "front": return this.executeEditing(new ZOrderCommand(this.requireDocument(), command.args[0], "front"));
       case "back": return this.executeEditing(new ZOrderCommand(this.requireDocument(), command.args[0], "back"));
+      case "group": return this.executeEditing(new GroupCommand(this.requireDocument(), command.args[0], command.args.slice(1)));
+      case "ungroup": return this.executeEditing(new UngroupCommand(this.requireDocument(), command.args[0]));
+      case "addto": return this.executeEditing(new AddToCommand(this.requireDocument(), command.args[0], command.args[1]));
       default: throw new CommandError(`command not implemented yet: ${command.name}`);
     }
   }
