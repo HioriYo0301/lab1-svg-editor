@@ -156,6 +156,6 @@ npm test
 3. 检查 `git log --oneline --decorate --graph`，确认开发过程是多个语义提交而不是 one-shot 提交。
 4. 最终提交前确认 `doc/README.md`、测试、类型检查和工作区状态均完成。
 
-## 6. 当前未完成的交付项
+## 6. 最终交付状态
 
-本阶段代码和测试已完成到 SVG CLI 功能闭环；最终交付前仍需完成最终验收、补充可能的格式细节、创建 `final` tag，并将 tag 推送到远程仓库。`box` 插件不属于本阶段交付内容。
+第一阶段的 SVG CLI 功能闭环已完成：六种内置图形、创建与层级操作、编辑命令、Command undo/redo、SVG read/save、缺失 id 自动补全、测试和类型检查均已验收。最终提交使用 `final` tag；`box` 插件不属于本阶段交付内容。

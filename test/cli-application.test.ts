@@ -23,6 +23,19 @@ describe("basic CLI application", () => {
     expect(app.handleLine("canvas")).toBe("canvas 400x300");
   });
 
+  it("creates every phase-one built-in shape type", () => {
+    const app = new CliApplication();
+    app.handleLine("init");
+    expect(app.handleLine("create rect r1 0 0 10 10")).toBe("rect#r1 created");
+    expect(app.handleLine("create circle c1 10 10 5")).toBe("circle#c1 created");
+    expect(app.handleLine("create ellipse e1 10 10 5 8")).toBe("ellipse#e1 created");
+    expect(app.handleLine("create line l1 0 0 10 10 black")).toBe("line#l1 created");
+    expect(app.handleLine('create text t1 0 20 "label"')).toBe("text#t1 created");
+    expect(app.handleLine("create g g1")).toBe("g#g1 created");
+    expect(app.handleLine("tree")).toContain("ellipse#e1");
+    expect(app.handleLine("tree")).toContain("line#l1");
+  });
+
   it("reports errors without changing state", () => {
     const app = new CliApplication();
     expect(app.handleLine("create rect r1 0 0 10 10")).toBe("error: no document. use 'init' or 'read' first");
