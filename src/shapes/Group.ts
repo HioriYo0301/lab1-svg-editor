@@ -47,18 +47,18 @@ export class Group extends Shape implements Iterable<Shape> {
   }
 
   public toSvg(): string {
-    const children = this.childShapes.map((child) => child.toSvg()).join("");
+    const children = [...this].map((child) => child.toSvg()).join("");
     return `<g id="${Shape.escapeXml(this.id)}"${this.commonAttributes()}>${children}</g>`;
   }
 
   public describe(): string { return `g#${this.id}${this.commonDescription()}`; }
 
   protected moveGeometry(dx: number, dy: number): void {
-    for (const child of this.childShapes) child.move(dx, dy);
+    for (const child of this) child.move(dx, dy);
   }
 
   protected scaleGeometry(factor: number): void {
-    for (const child of this.childShapes) child.scale(factor);
+    for (const child of this) child.scale(factor);
   }
 
   protected setGeometryAttribute(attribute: string, _value: string): void {
