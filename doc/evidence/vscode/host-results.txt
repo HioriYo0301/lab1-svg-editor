@@ -1,0 +1,6 @@
+PASS decoration: SVG file only; no ordinary file, directory, missing file or non-file URI
+PASS native command: registered provider returns root, nested groups, leaves and unnamed text
+PASS real Outline click locates rect#start on source line 4
+PASS edit update: registered provider returns rect#updated without saving
+PASS incomplete XML: Outline empty; extension remains responsive
+PASS recovery and disk integrity: original file bytes and directory names unchanged

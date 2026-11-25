@@ -124,3 +124,9 @@ npm test
 ```
 
 测试覆盖：图形几何行为、Group 递归操作、id 唯一性、Tokenizer 引号和注释、基础 CLI、编辑&结构命令、undo/redo、IO 历史屏障、SVG round-trip、缺失 id 自动补全。
+
+## 6. Phase 2 开发入口
+
+以上章节保留阶段一完成时的记录。阶段二按 [执行计划](phase2-plan.md) 分节点开发，当前先完成基线整理与 VS Code 插件实践，不将后续 CLI 插件化计为已实现。
+
+VS Code 扩展位于独立的 `vscode-extension/`，安装、F5 启动、文件标记与原生大纲实现、Decorator/Adapter 分析、阶段一复用评估和 AI 建议检查记录见 [扩展说明](../vscode-extension/README.md)。扩展指标与 CLI 指标分开。

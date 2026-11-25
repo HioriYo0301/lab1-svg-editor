@@ -1,0 +1,50 @@
+{
+  "name": "svg-lab-tools",
+  "displayName": "SVG Lab Tools",
+  "description": "Explorer decorations and Outline support for SVG files used by Lab1.",
+  "version": "0.1.0",
+  "private": true,
+  "publisher": "svg-lab",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "onLanguage:svg"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "svg",
+        "extensions": [
+          ".svg"
+        ],
+        "aliases": [
+          "SVG"
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --config vitest.config.mjs",
+    "test:host": "npm run compile && node scripts/run-host-tests.cjs"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/sax": "^1.2.7",
+    "@types/vscode": "1.85.0",
+    "@vscode/test-electron": "^3.1.0",
+    "playwright-core": "^1.65.1",
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.0"
+  },
+  "dependencies": {
+    "sax": "^1.6.1"
+  }
+}

@@ -4,4 +4,7 @@ dist/
 coverage/
 *.log
 *.svg
+!vscode-extension/examples/**/*.svg
+vscode-extension/out/
+vscode-extension/.vscode-test/
 .env
