@@ -2,6 +2,10 @@
 
 24302010001 莫梓铎
 
+github仓库链接：
+
+`https://github.com/HioriYo0301/lab1-svg-editor`
+
 本文档包含第一阶段 SVG CLI 编辑器的架构方案、设计模式落地、开发过程、一致性自查和验收指南
 
 ## 1. 架构方案
