@@ -129,4 +129,6 @@ npm test
 
 以上章节保留阶段一完成时的记录。阶段二按 [执行计划](phase2-plan.md) 分节点开发，当前先完成基线整理与 VS Code 插件实践，不将后续 CLI 插件化计为已实现。
 
+阶段二 [Part 1 实验报告](lab2/part1.md) 按开发节点与验收过程组织。报告、截图和宿主验收日志统一保存在 `doc/lab2/`，图片与报告同级。
+
 VS Code 扩展位于独立的 `vscode-extension/`，安装、F5 启动、文件标记与原生大纲实现、Decorator/Adapter 分析、阶段一复用评估和 AI 建议检查记录见 [扩展说明](../vscode-extension/README.md)。扩展指标与 CLI 指标分开。

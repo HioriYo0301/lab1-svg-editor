@@ -52,7 +52,7 @@ npm run test:host
 
 `test:host` 使用微软 `@vscode/test-electron` 下载独立编辑器，在临时工作区和独立用户配置中运行，不修改你的 VS Code 设置。首次下载较大，后续使用缓存。也可设置环境变量 `VSCODE_EXECUTABLE_PATH` 指定本机 Code.exe。真实宿主使用调试端口 9337，运行时该端口需空闲。
 
-单元测试覆盖嵌套/无 id、显式闭合、源码范围（含 CRLF/中文/emoji）、注释/CDATA/属性引号、编辑更新和非法 XML。主机测试调用真实 VS Code 注册接口，再通过真实 Outline 点击验证定位、编辑刷新、非法输入恢复，检查磁盘字节和文件名不变，并保存截图到 `doc/evidence/vscode/`。
+单元测试覆盖嵌套/无 id、显式闭合、源码范围（含 CRLF/中文/emoji）、注释/CDATA/属性引号、编辑更新和非法 XML。主机测试调用真实 VS Code 注册接口，再通过真实 Outline 点击验证定位、编辑刷新、非法输入恢复，检查磁盘字节和文件名不变，并保存截图到 `doc/lab2/`，与 [Part 1 实验报告](../doc/lab2/part1.md) 同级。
 
 参考：[VS Code API](https://code.visualstudio.com/api/references/vscode-api)、[微软扩展测试指南](https://code.visualstudio.com/api/working-with-extensions/testing-extension)。
 
@@ -74,18 +74,18 @@ npm run test:host
 
 ## 本次真实运行证据（2026-11-25）
 
-独立 VS Code 1.148.0 Extension Development Host 已通过六组检查，原始结果见 [host-results.txt](../doc/evidence/vscode/host-results.txt)。代码在真实宿主中运行；截图不是模拟界面。
+独立 VS Code 1.148.0 Extension Development Host 已通过六组检查，原始结果见 [host-results.txt](../doc/lab2/host-results.txt)。代码在真实宿主中运行；截图不是模拟界面。
 
 1. 文件标记与原生大纲定位：`nested.svg` 右侧显示 `[]`，`notes.txt` 与 `folder.svg` 目录无标记；大纲选中 `rect#start` 后定位第 4 行。
 
-![文件标记、大纲层级与点击源码定位](../doc/evidence/vscode/01_badge_outline_location.png)
+![文件标记、大纲层级与点击源码定位](../doc/lab2/01_badge_outline_location.png)
 
 2. 在编辑器内将 id 改为 updated（未保存），大纲和面包屑同步变化。
 
-![编辑后大纲更新](../doc/evidence/vscode/02_outline_after_edit.png)
+![编辑后大纲更新](../doc/lab2/02_outline_after_edit.png)
 
 3. 输入不完整 XML 后大纲显示无符号；测试随后恢复完整内容并验证大纲恢复。整个测试未保存临时修改，磁盘字节和文件名检查通过。
 
-![不完整 XML 安全清空大纲](../doc/evidence/vscode/03_incomplete_xml.png)
+![不完整 XML 安全清空大纲](../doc/lab2/03_incomplete_xml.png)
 
 宿主观察：Outline 是 VS Code 已有的树视图，支持折叠容器、单击选择符号并定位文本；符号来自 provider 返回的 `children` 与 `selectionRange`，扩展不另造 TreeView。编辑器文档变化后宿主重新请求符号，无符号时显示原生空状态。SVG 默认图片关联会影响点击跳转，已通过示例工作区的文本编辑器关联解决。

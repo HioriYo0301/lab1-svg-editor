@@ -5,7 +5,7 @@
 ## 提交节点
 
 1. **整理基线**：只提交原有 README 仓库地址改动；阶段一 typecheck 和 49 项测试通过；保持 final 指向 6808a3b。已提交 e693baa。
-2. **VS Code 实践（已完成）**：文件装饰、原生 Outline、异常 XML、启动配置、独立测试、示例、截图、模式分析与复用评估。提交 `feat: add vscode svg decorations and outline`。12 项解析单元测试与真实 VS Code 1.148.0 宿主的六组验收通过，CLI 49 项回归通过；截图与宿主记录在 `doc/evidence/vscode/`。
+2. **VS Code 实践（已完成）**：文件装饰、原生 Outline、异常 XML、启动配置、独立测试、示例、截图、模式分析与复用评估。提交 `feat: add vscode svg decorations and outline`。12 项解析单元测试与真实 VS Code 1.148.0 宿主的六组验收通过，CLI 49 项回归通过；报告、截图与宿主记录统一在 `doc/lab2/`。
 3. **框架可扩展**：内核公开 ShapeProvider、Command、TreeDecorator、AttributeHandler，建立统一注册/校验路径；六种内置图形和全部原命令通过装配注册。同步准备公开容器能力、结构不变量、属性事务和读回扩展，确保后续 box 提交不改内核。阶段一回归通过并首次生成 metrics。提交 `refactor: introduce cli extension points`。
 4. **命令插件**：独立 stats、dir；DirectoryAccess 和 Node 适配器；替身与真实临时目录测试。提交 `feat: add stats and dir command plugins`。
 5. **box 接入**：创建、嵌套、派生 id、必要子部件保护、属性处理、读回降级、失败恢复和一次 set 一个 undo 单元。该接入提交不得修改内核或既有插件。提交 `feat: add box shape and attribute plugins`。

@@ -30,7 +30,7 @@ async function main() {
     launchArgs: [process.env.SVG_LAB_TEST_WORKSPACE, '--disable-extensions', '--skip-welcome', '--skip-release-notes', '--disable-workspace-trust', '--remote-debugging-port=9337', '--user-data-dir', path.join(scratch, 'profile')],
     extensionTestsEnv: {
       SVG_LAB_TEST_WORKSPACE: process.env.SVG_LAB_TEST_WORKSPACE,
-      SVG_LAB_EVIDENCE: path.join(root, '..', 'doc', 'evidence', 'vscode'),
+      SVG_LAB_EVIDENCE: path.join(root, '..', 'doc', 'lab2'),
     },
   };
   if (process.env.VSCODE_EXECUTABLE_PATH) options.vscodeExecutablePath = process.env.VSCODE_EXECUTABLE_PATH;
