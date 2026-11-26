@@ -224,3 +224,35 @@ git diff --check
 > **截图预留 P2-03：dir 命令。**
 > 内容：固定测试目录中同时存在隐藏文件、普通文件和子目录，`dir` 输出 `[DIR]` 在前、`[FILE]` 在后且名称升序；另记录空目录和失败路径。
 > 获取方式：在临时工作目录启动 CLI，确保日志输出到工作目录之外，再执行 `dir`；图片与本报告同级，建议命名 `p2-03-dir.png`。临时目录内容不应提交到仓库。
+
+## 10. 第二阶段 CLI 节点 4—5：box 与树标签
+
+### 10.1 节点 4：`box` 图形插件
+
+`BoxShapeProvider` 通过注册机制提供 `box`，创建一棵由 `g#id`、`rect#id-rect` 和 `text#id-label` 组成的复合图形。`box` 仍作为容器参与 `in`、移动和递归遍历；序列化使用 `data-kind="box"`。读回时，已注册 provider 根据该标记还原 box；缺少插件时仍可由普通分组读回策略继续兼容。
+
+`fill` 和 `label` 是 box 的领域属性：前者修改内部矩形，后者修改内部文字。属性修改沿用现有 `SetAttributeCommand`，因此每条 `set` 命令仍是一个 undo 单元；box 的必要子部件使用派生 id，普通 `ungroup` 对其仍会按复合容器规则处理。插件测试覆盖创建、移动、fill/label、序列化读回以及 undo/redo。
+
+### 10.2 节点 5：树标签插件
+
+`TreeDecorator` 在基础 `describe()` 文本之后追加标签，树渲染器不枚举具体标签名称。`BoxTypeDecorator` 为 box 行追加 `(box)`；`ModifiedStarDecorator` 将 dirty 状态封装在实例字段中并追加 `*`。两个 decorator 独立注册、顺序组合，互不感知。
+
+当前 dirty 语义按“序列化内容是否与最近一次 init/read/save 的保存点一致”判定；编辑后显示 `*`，保存或 undo 回到保存点后清除。为保证树输出兼容，未注册 decorator 时仍使用阶段一原始描述。
+
+### 10.3 分阶段验收
+
+```powershell
+npm run typecheck
+npm test
+git diff --check
+```
+
+本节点新增 box 与标签测试，当前总计 11 个测试文件、53 项通过。测试覆盖 box 内部矩形/文字修改、一次 undo/redo、`data-kind="box"` 序列化读回、`(box)` 标签和 `modified-star` 标签并存。
+
+> **截图预留 P2-04：box 复合图形。**
+> 内容：`create box`、`tree`、`set fill`、`set label`、`undo`/`redo` 的 CLI 会话，显示内部子部件和标签。
+> 获取方式：在 CLI 中回放固定会话并截取终端，图片与本报告同级，建议命名 `p2-04-box.png`。
+
+> **截图预留 P2-05：树标签状态机。**
+> 内容：编辑后出现 `*`，保存后清除；再编辑后执行 undo 回到保存点，`*` 再次消失；同一行可同时看到 `(box)` 与 `*`。
+> 获取方式：使用关闭自动保存的 CLI 会话或测试替身逐步截图，图片与本报告同级，建议命名 `p2-05-tree-decorators.png`。
