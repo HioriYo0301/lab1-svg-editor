@@ -30,6 +30,9 @@ describe("box plugin and tree decorators", () => {
     expect(xml).toContain("saved");
     expect(app.handleLine("read box.svg")).toContain("read");
     expect(app.currentDocument?.findById("n1")?.type).toBe("box");
+    const withoutPlugin = new CliApplication(new NodeFileSystem(), undefined, undefined, []);
+    expect(withoutPlugin.handleLine("read box.svg")).toContain("read");
+    expect(withoutPlugin.currentDocument?.findById("n1")?.type).toBe("g");
   });
 
   it("adds independent box and modified labels", () => {

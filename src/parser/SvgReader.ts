@@ -54,7 +54,7 @@ export class SvgReader {
     if (usedIds.has(id)) throw new ShapeError(`id already exists: ${id}`);
     usedIds.add(id);
     const children = this.asNodes(node[type]);
-    if (type === "g" && attributes["data-kind"] === "box") {
+    if (type === "g" && attributes["data-kind"] === "box" && this.factory.hasProvider("box")) {
       const rectNode = children.find((child) => this.elementName(child) === "rect");
       const textNode = children.find((child) => this.elementName(child) === "text");
       if (rectNode === undefined || textNode === undefined) throw new ShapeError(`invalid box: ${id}`);

@@ -15,6 +15,7 @@ export class ShapeFactory {
     if (this.providers.has(provider.name)) throw new ShapeError(`duplicate registration: shape/${provider.name}`);
     this.providers.set(provider.name, provider);
   }
+  public hasProvider(type: string): boolean { return this.providers.has(type); }
 
   public create(type: string, id: string, parameters: readonly string[]): Shape {
     const provider = this.providers.get(type);
