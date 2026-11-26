@@ -1,0 +1,292 @@
+{
+  "generatedAt": "2026-11-26T06:07:42.698Z",
+  "scope": "tracked source files; dependencies and build output excluded",
+  "totals": {
+    "core": 1094,
+    "assembly": 381,
+    "plugin": 123,
+    "vscode-extension": 105
+  },
+  "files": [
+    {
+      "file": "src/cli/.gitkeep",
+      "category": "assembly",
+      "lines": 2
+    },
+    {
+      "file": "src/cli/CliApplication.ts",
+      "category": "assembly",
+      "lines": 215
+    },
+    {
+      "file": "src/cli/CommandParser.ts",
+      "category": "assembly",
+      "lines": 44
+    },
+    {
+      "file": "src/cli/CommandRegistry.ts",
+      "category": "assembly",
+      "lines": 51
+    },
+    {
+      "file": "src/cli/ParseError.ts",
+      "category": "assembly",
+      "lines": 7
+    },
+    {
+      "file": "src/cli/Tokenizer.ts",
+      "category": "assembly",
+      "lines": 43
+    },
+    {
+      "file": "src/commands/.gitkeep",
+      "category": "core",
+      "lines": 2
+    },
+    {
+      "file": "src/commands/AddToCommand.ts",
+      "category": "core",
+      "lines": 41
+    },
+    {
+      "file": "src/commands/Command.ts",
+      "category": "core",
+      "lines": 5
+    },
+    {
+      "file": "src/commands/CommandError.ts",
+      "category": "core",
+      "lines": 7
+    },
+    {
+      "file": "src/commands/DeleteCommand.ts",
+      "category": "core",
+      "lines": 19
+    },
+    {
+      "file": "src/commands/GroupCommand.ts",
+      "category": "core",
+      "lines": 68
+    },
+    {
+      "file": "src/commands/MoveCommand.ts",
+      "category": "core",
+      "lines": 17
+    },
+    {
+      "file": "src/commands/ScaleCommand.ts",
+      "category": "core",
+      "lines": 17
+    },
+    {
+      "file": "src/commands/SetAttributeCommand.ts",
+      "category": "core",
+      "lines": 23
+    },
+    {
+      "file": "src/commands/UngroupCommand.ts",
+      "category": "core",
+      "lines": 34
+    },
+    {
+      "file": "src/commands/ZOrderCommand.ts",
+      "category": "core",
+      "lines": 22
+    },
+    {
+      "file": "src/document/.gitkeep",
+      "category": "core",
+      "lines": 2
+    },
+    {
+      "file": "src/document/DocumentError.ts",
+      "category": "core",
+      "lines": 7
+    },
+    {
+      "file": "src/document/ShapePlacement.ts",
+      "category": "core",
+      "lines": 9
+    },
+    {
+      "file": "src/document/SvgDocument.ts",
+      "category": "core",
+      "lines": 150
+    },
+    {
+      "file": "src/history/.gitkeep",
+      "category": "core",
+      "lines": 2
+    },
+    {
+      "file": "src/history/History.ts",
+      "category": "core",
+      "lines": 45
+    },
+    {
+      "file": "src/history/HistoryError.ts",
+      "category": "core",
+      "lines": 7
+    },
+    {
+      "file": "src/io/.gitkeep",
+      "category": "core",
+      "lines": 2
+    },
+    {
+      "file": "src/io/DirectoryAccess.ts",
+      "category": "core",
+      "lines": 9
+    },
+    {
+      "file": "src/io/FileSystem.ts",
+      "category": "core",
+      "lines": 5
+    },
+    {
+      "file": "src/io/NodeDirectoryAccess.ts",
+      "category": "core",
+      "lines": 12
+    },
+    {
+      "file": "src/io/NodeFileSystem.ts",
+      "category": "core",
+      "lines": 8
+    },
+    {
+      "file": "src/main.ts",
+      "category": "assembly",
+      "lines": 19
+    },
+    {
+      "file": "src/parser/.gitkeep",
+      "category": "core",
+      "lines": 2
+    },
+    {
+      "file": "src/parser/SvgReader.ts",
+      "category": "core",
+      "lines": 111
+    },
+    {
+      "file": "src/plugins/AttributeHandler.ts",
+      "category": "plugin",
+      "lines": 6
+    },
+    {
+      "file": "src/plugins/CommandPlugin.ts",
+      "category": "plugin",
+      "lines": 10
+    },
+    {
+      "file": "src/plugins/DirCommandPlugin.ts",
+      "category": "plugin",
+      "lines": 25
+    },
+    {
+      "file": "src/plugins/Plugin.ts",
+      "category": "plugin",
+      "lines": 6
+    },
+    {
+      "file": "src/plugins/PluginContext.ts",
+      "category": "plugin",
+      "lines": 34
+    },
+    {
+      "file": "src/plugins/ShapeProvider.ts",
+      "category": "plugin",
+      "lines": 7
+    },
+    {
+      "file": "src/plugins/StatsCommandPlugin.ts",
+      "category": "plugin",
+      "lines": 28
+    },
+    {
+      "file": "src/plugins/TreeDecorator.ts",
+      "category": "plugin",
+      "lines": 7
+    },
+    {
+      "file": "src/serializer/.gitkeep",
+      "category": "core",
+      "lines": 2
+    },
+    {
+      "file": "src/serializer/SvgWriter.ts",
+      "category": "core",
+      "lines": 9
+    },
+    {
+      "file": "src/shapes/.gitkeep",
+      "category": "core",
+      "lines": 2
+    },
+    {
+      "file": "src/shapes/Circle.ts",
+      "category": "core",
+      "lines": 35
+    },
+    {
+      "file": "src/shapes/Ellipse.ts",
+      "category": "core",
+      "lines": 42
+    },
+    {
+      "file": "src/shapes/Group.ts",
+      "category": "core",
+      "lines": 79
+    },
+    {
+      "file": "src/shapes/Line.ts",
+      "category": "core",
+      "lines": 31
+    },
+    {
+      "file": "src/shapes/Rect.ts",
+      "category": "core",
+      "lines": 48
+    },
+    {
+      "file": "src/shapes/Shape.ts",
+      "category": "core",
+      "lines": 100
+    },
+    {
+      "file": "src/shapes/ShapeError.ts",
+      "category": "core",
+      "lines": 7
+    },
+    {
+      "file": "src/shapes/ShapeFactory.ts",
+      "category": "core",
+      "lines": 84
+    },
+    {
+      "file": "src/shapes/Text.ts",
+      "category": "core",
+      "lines": 29
+    },
+    {
+      "file": "vscode-extension/src/extension.ts",
+      "category": "vscode-extension",
+      "lines": 16
+    },
+    {
+      "file": "vscode-extension/src/svgDocumentSymbolProvider.ts",
+      "category": "vscode-extension",
+      "lines": 25
+    },
+    {
+      "file": "vscode-extension/src/svgFileDecorationProvider.ts",
+      "category": "vscode-extension",
+      "lines": 15
+    },
+    {
+      "file": "vscode-extension/src/svgOutlineParser.ts",
+      "category": "vscode-extension",
+      "lines": 49
+    }
+  ]
+}

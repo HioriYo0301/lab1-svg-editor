@@ -6,9 +6,19 @@ import { Rect } from "./Rect.js";
 import { Shape } from "./Shape.js";
 import { ShapeError } from "./ShapeError.js";
 import { Text } from "./Text.js";
+import { ShapeProvider } from "../plugins/ShapeProvider.js";
 
 export class ShapeFactory {
+  private readonly providers = new Map<string, ShapeProvider>();
+
+  public register(provider: ShapeProvider): void {
+    if (this.providers.has(provider.name)) throw new ShapeError(`duplicate registration: shape/${provider.name}`);
+    this.providers.set(provider.name, provider);
+  }
+
   public create(type: string, id: string, parameters: readonly string[]): Shape {
+    const provider = this.providers.get(type);
+    if (provider !== undefined) return provider.create(id, parameters);
     switch (type) {
       case "rect": return this.createRect(id, parameters);
       case "circle": return this.createCircle(id, parameters);

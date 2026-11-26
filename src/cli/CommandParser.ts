@@ -17,6 +17,10 @@ export class CommandParser {
     this.tokenizer = tokenizer;
   }
 
+  public register(name: string, minArgs: number, maxArgs = minArgs): void {
+    this.registry.registerPlugin(name, minArgs, maxArgs);
+  }
+
   public parse(line: string): ParsedCommand | null {
     const tokens = this.tokenizer.tokenize(line);
     if (tokens.length === 0) return null;

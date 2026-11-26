@@ -19,6 +19,11 @@ export class CommandRegistry {
     return this.specs.get(name);
   }
 
+  public registerPlugin(name: string, minArgs: number, maxArgs = minArgs): void {
+    if (this.specs.has(name)) throw new Error(`duplicate registration: command/${name}`);
+    this.register(name, minArgs, maxArgs);
+  }
+
   public static default(): CommandRegistry {
     const registry = new CommandRegistry();
     registry.register("init", 0, 2);

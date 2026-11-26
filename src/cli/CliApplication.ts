@@ -18,19 +18,27 @@ import { FileSystem } from "../io/FileSystem.js";
 import { NodeFileSystem } from "../io/NodeFileSystem.js";
 import { SvgReader } from "../parser/SvgReader.js";
 import { SvgWriter } from "../serializer/SvgWriter.js";
+import { PluginContext } from "../plugins/PluginContext.js";
+import { CommandPlugin } from "../plugins/CommandPlugin.js";
+import { StatsCommandPlugin } from "../plugins/StatsCommandPlugin.js";
+import { DirCommandPlugin } from "../plugins/DirCommandPlugin.js";
+import { CommandRegistry } from "./CommandRegistry.js";
 
 export class CliApplication {
   private document: SvgDocument | null = null;
   private readonly parser = new CommandParser();
+  private readonly pluginContext = new PluginContext();
+  private readonly pluginCommands = new Map<string, CommandPlugin>();
   private readonly factory = new ShapeFactory();
   private readonly history = new History();
   private currentPath: string | undefined;
   private readonly reader: SvgReader;
   private readonly writer: SvgWriter;
 
-  public constructor(private readonly fileSystem: FileSystem = new NodeFileSystem(), reader = new SvgReader(), writer = new SvgWriter()) {
+  public constructor(private readonly fileSystem: FileSystem = new NodeFileSystem(), reader = new SvgReader(), writer = new SvgWriter(), plugins: readonly CommandPlugin[] = [new StatsCommandPlugin(), new DirCommandPlugin()]) {
     this.reader = reader;
     this.writer = writer;
+    for (const plugin of plugins) this.registerCommandPlugin(plugin);
   }
 
   public handleLine(line: string): string | null {
@@ -45,8 +53,23 @@ export class CliApplication {
   }
 
   public get currentDocument(): SvgDocument | null { return this.document; }
+  public get extensions(): PluginContext { return this.pluginContext; }
+
+  public registerCommandPlugin(plugin: CommandPlugin): void {
+    if (this.pluginCommands.has(plugin.name)) throw new CommandError(`duplicate registration: command/${plugin.name}`);
+    this.parser.register(plugin.name, plugin.minArgs, plugin.maxArgs);
+    this.pluginContext.registerCommand({ name: plugin.name, minArgs: plugin.minArgs, maxArgs: plugin.maxArgs, help: plugin.help, execute: plugin.execute });
+    this.pluginCommands.set(plugin.name, plugin);
+  }
+
+  public registerShapeProvider(provider: import("../plugins/ShapeProvider.js").ShapeProvider): void {
+    this.factory.register(provider);
+    this.pluginContext.registerShape(provider);
+  }
 
   private execute(command: ParsedCommand): string {
+    const plugin = this.pluginCommands.get(command.name);
+    if (plugin !== undefined) return plugin.execute(this, command.args);
     switch (command.name) {
       case "init": return this.init(command.args);
       case "read": return this.read(command.args[0]);
@@ -137,6 +160,7 @@ export class CliApplication {
       "move <id> <dx> <dy>", "scale <id> <factor>", "set <id> <attr> <value>",
       "group <newGid> <id1> <id2>...", "ungroup <gid>", "addto <gid> <id>",
       "front/back <id>", "tree [id]", "show <id>", "undo", "redo",
+      ...[...this.pluginCommands.values()].map((plugin) => plugin.help),
     ].join("\n");
   }
 

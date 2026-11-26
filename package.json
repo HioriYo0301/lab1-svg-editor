@@ -6,7 +6,8 @@
   "scripts": {
     "cli": "tsx src/main.ts",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "metrics": "node scripts/metrics.mjs"
   },
   "dependencies": {
     "fast-xml-parser": "^5.2.5"
