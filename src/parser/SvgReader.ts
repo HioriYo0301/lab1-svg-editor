@@ -4,6 +4,7 @@ import { ShapeFactory } from "../shapes/ShapeFactory.js";
 import { Shape } from "../shapes/Shape.js";
 import { Group } from "../shapes/Group.js";
 import { ShapeError } from "../shapes/ShapeError.js";
+import { ShapeProvider } from "../plugins/ShapeProvider.js";
 
 interface XmlNode {
   [name: string]: unknown;
@@ -25,6 +26,7 @@ export class SvgReader {
   });
 
   public constructor(private readonly factory = new ShapeFactory()) {}
+  public registerShapeProvider(provider: ShapeProvider): void { this.factory.register(provider); }
 
   public read(content: string): SvgReadResult {
     const parsed = this.parser.parse(content) as XmlNode[];
@@ -52,6 +54,18 @@ export class SvgReader {
     if (usedIds.has(id)) throw new ShapeError(`id already exists: ${id}`);
     usedIds.add(id);
     const children = this.asNodes(node[type]);
+    if (type === "g" && attributes["data-kind"] === "box") {
+      const rectNode = children.find((child) => this.elementName(child) === "rect");
+      const textNode = children.find((child) => this.elementName(child) === "text");
+      if (rectNode === undefined || textNode === undefined) throw new ShapeError(`invalid box: ${id}`);
+      const rectAttributes = this.attributes(rectNode);
+      const textAttributes = this.attributes(textNode);
+      const textChildren = this.asNodes(textNode["text"]);
+      const label = textChildren.filter((child) => child["#text"] !== undefined).map((child) => String(child["#text"])).join("");
+      const box = this.factory.create("box", id, [rectAttributes["x"] ?? "0", rectAttributes["y"] ?? "0", rectAttributes["width"] ?? "0", rectAttributes["height"] ?? "0", label]);
+      if (rectAttributes["fill"] !== undefined) box.setAttribute("fill", rectAttributes["fill"]);
+      return box;
+    }
     const parameters = this.parameters(type, attributes, children);
     const shape = this.factory.create(type, id, parameters);
     for (const attribute of ["fill", "stroke", "stroke-width"] as const) {

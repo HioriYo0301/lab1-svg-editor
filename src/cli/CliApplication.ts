@@ -23,17 +23,22 @@ import { CommandPlugin } from "../plugins/CommandPlugin.js";
 import { StatsCommandPlugin } from "../plugins/StatsCommandPlugin.js";
 import { DirCommandPlugin } from "../plugins/DirCommandPlugin.js";
 import { CommandRegistry } from "./CommandRegistry.js";
+import { ShapeProvider } from "../plugins/ShapeProvider.js";
+import { TreeDecorator } from "../plugins/TreeDecorator.js";
+import { ModifiedStarDecorator } from "../plugins/ModifiedStarDecorator.js";
 
 export class CliApplication {
   private document: SvgDocument | null = null;
   private readonly parser = new CommandParser();
   private readonly pluginContext = new PluginContext();
   private readonly pluginCommands = new Map<string, CommandPlugin>();
+  private readonly treeDecorators: TreeDecorator[] = [];
   private readonly factory = new ShapeFactory();
   private readonly history = new History();
   private currentPath: string | undefined;
   private readonly reader: SvgReader;
   private readonly writer: SvgWriter;
+  private savedMarkup: string | undefined;
 
   public constructor(private readonly fileSystem: FileSystem = new NodeFileSystem(), reader = new SvgReader(), writer = new SvgWriter(), plugins: readonly CommandPlugin[] = [new StatsCommandPlugin(), new DirCommandPlugin()]) {
     this.reader = reader;
@@ -62,10 +67,12 @@ export class CliApplication {
     this.pluginCommands.set(plugin.name, plugin);
   }
 
-  public registerShapeProvider(provider: import("../plugins/ShapeProvider.js").ShapeProvider): void {
+  public registerShapeProvider(provider: ShapeProvider): void {
     this.factory.register(provider);
+    this.reader.registerShapeProvider(provider);
     this.pluginContext.registerShape(provider);
   }
+  public registerTreeDecorator(decorator: TreeDecorator): void { this.pluginContext.registerDecorator(decorator); this.treeDecorators.push(decorator); }
 
   private execute(command: ParsedCommand): string {
     const plugin = this.pluginCommands.get(command.name);
@@ -88,8 +95,8 @@ export class CliApplication {
       case "group": return this.executeEditing(new GroupCommand(this.requireDocument(), command.args[0], command.args.slice(1)));
       case "ungroup": return this.executeEditing(new UngroupCommand(this.requireDocument(), command.args[0]));
       case "addto": return this.executeEditing(new AddToCommand(this.requireDocument(), command.args[0], command.args[1]));
-      case "undo": return this.history.undo();
-      case "redo": return this.history.redo();
+      case "undo": { const result = this.history.undo(); this.syncDirty(); return result; }
+      case "redo": { const result = this.history.redo(); this.syncDirty(); return result; }
       default: throw new CommandError(`command not implemented yet: ${command.name}`);
     }
   }
@@ -98,6 +105,8 @@ export class CliApplication {
     const width = args[0] === undefined ? 800 : this.number(args[0], "width");
     const height = args[1] === undefined ? 600 : this.number(args[1], "height");
     this.document = new SvgDocument(width, height);
+    this.savedMarkup = this.writer.write(this.document);
+    this.syncDirty();
     this.currentPath = undefined;
     this.history.markIoBoundary();
     return `canvas ${width}x${height} created`;
@@ -111,6 +120,8 @@ export class CliApplication {
     try { result = this.reader.read(content); }
     catch (error) { throw new CommandError(`cannot read file: ${path}`); }
     this.document = result.document;
+    this.savedMarkup = this.writer.write(this.document);
+    this.syncDirty();
     this.currentPath = path;
     this.history.markIoBoundary();
     const warningText = result.warnings.length === 0 ? [] : [...result.warnings];
@@ -124,6 +135,8 @@ export class CliApplication {
     try { this.fileSystem.writeFile(target, this.writer.write(document)); }
     catch { throw new CommandError(`cannot write file: ${target}`); }
     this.currentPath = target;
+    this.savedMarkup = this.writer.write(document);
+    this.syncDirty();
     this.history.markIoBoundary();
     return `saved to ${target} (${document.elementCount} elements)`;
   }
@@ -175,7 +188,9 @@ export class CliApplication {
   }
 
   private appendTree(lines: string[], shape: Shape, prefix: string, last: boolean): void {
-    lines.push(`${prefix}${last ? "└── " : "├── "}${shape.describe()}`);
+    let label = shape.describe();
+    for (const decorator of this.treeDecorators) label = decorator.decorate(shape, label);
+    lines.push(`${prefix}${last ? "└── " : "├── "}${label}`);
     if (shape instanceof Group) {
       const children = [...shape];
       const childPrefix = `${prefix}${last ? "    " : "│   "}`;
@@ -209,6 +224,18 @@ export class CliApplication {
   }
 
   private executeEditing(command: Command): string {
-    return this.history.execute(command);
+    const result = this.history.execute(command);
+    this.syncDirty();
+    return result;
   }
+  private syncDirty(): void {
+    const document = this.document;
+    if (document === null) return;
+    const dirty = this.savedMarkup !== this.writer.write(document);
+    for (const decorator of this.treeDecorators) if (decorator instanceof ModifiedStarDecorator) {
+      if (!dirty) decorator.clear();
+      else { const ids: string[] = []; for (const shape of document) this.collectIds(shape, ids); decorator.setDirty(ids); }
+    }
+  }
+  private collectIds(shape: Shape, ids: string[]): void { ids.push(shape.id); if (shape instanceof Group) for (const child of shape) this.collectIds(child, ids); }
 }
