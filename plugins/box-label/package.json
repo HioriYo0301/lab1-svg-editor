@@ -1,0 +1,7 @@
+{
+  "name": "@svgframe/plugin-box-label",
+  "private": true,
+  "type": "module",
+  "main": "index.ts",
+  "contributes": { "decorators": ["box-type-label"] }
+}

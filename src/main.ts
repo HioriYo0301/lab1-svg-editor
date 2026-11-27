@@ -1,7 +1,9 @@
 import { createInterface } from "node:readline";
-import { CliApplication } from "./cli/CliApplication.js";
+import { createApplication } from "./host/CompositionRoot.js";
 
-const application = new CliApplication();
+const args = process.argv.slice(2);
+const valid = args.length === 0 || (args.length === 2 && args[0] === "--config");
+const application = await createApplication(valid && args.length === 2 ? args[1] : valid ? undefined : "");
 console.log("svg-editor 0.1 — type 'help' for commands");
 
 const interactive = process.stdin.isTTY;

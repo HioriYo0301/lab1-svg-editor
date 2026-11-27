@@ -16,6 +16,7 @@ export class ShapeFactory {
     this.providers.set(provider.name, provider);
   }
   public hasProvider(type: string): boolean { return this.providers.has(type); }
+  public hasType(type: string): boolean { return this.hasProvider(type) || ["rect", "circle", "ellipse", "line", "text", "g"].includes(type); }
 
   public create(type: string, id: string, parameters: readonly string[]): Shape {
     const provider = this.providers.get(type);

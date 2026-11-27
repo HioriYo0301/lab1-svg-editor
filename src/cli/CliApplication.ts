@@ -20,8 +20,6 @@ import { SvgReader } from "../parser/SvgReader.js";
 import { SvgWriter } from "../serializer/SvgWriter.js";
 import { PluginContext } from "../plugins/PluginContext.js";
 import { CommandPlugin } from "../plugins/CommandPlugin.js";
-import { StatsCommandPlugin } from "../plugins/StatsCommandPlugin.js";
-import { DirCommandPlugin } from "../plugins/DirCommandPlugin.js";
 import { CommandRegistry } from "./CommandRegistry.js";
 import { ShapeProvider } from "../plugins/ShapeProvider.js";
 import { TreeDecorator } from "../plugins/TreeDecorator.js";
@@ -40,7 +38,7 @@ export class CliApplication {
   private readonly writer: SvgWriter;
   private savedMarkup: string | undefined;
 
-  public constructor(private readonly fileSystem: FileSystem = new NodeFileSystem(), reader = new SvgReader(), writer = new SvgWriter(), plugins: readonly CommandPlugin[] = [new StatsCommandPlugin(), new DirCommandPlugin()]) {
+  public constructor(private readonly fileSystem: FileSystem = new NodeFileSystem(), reader = new SvgReader(), writer = new SvgWriter(), plugins: readonly CommandPlugin[] = []) {
     this.reader = reader;
     this.writer = writer;
     for (const plugin of plugins) this.registerCommandPlugin(plugin);
@@ -73,6 +71,34 @@ export class CliApplication {
     this.pluginContext.registerShape(provider);
   }
   public registerTreeDecorator(decorator: TreeDecorator): void { this.pluginContext.registerDecorator(decorator); this.treeDecorators.push(decorator); }
+
+  /** Preflight every entry before touching live parser/factories/registries. */
+  public installExtensions(staged: PluginContext): void {
+    // Validate every contract, including contexts provided by JavaScript plugins.
+    const checked = new PluginContext();
+    for (const plugin of staged.commands.values()) checked.registerCommand(plugin);
+    for (const provider of staged.shapes.values()) checked.registerShape(provider);
+    for (const decorator of staged.decorators.values()) checked.registerDecorator(decorator);
+    for (const handler of staged.attributes.values()) checked.registerAttribute(handler);
+    const builtins = CommandRegistry.default();
+    for (const [category, pending, live] of [
+      ["commands", staged.commands, this.pluginContext.commands],
+      ["shapes", staged.shapes, this.pluginContext.shapes],
+      ["decorators", staged.decorators, this.pluginContext.decorators],
+      ["attributes", staged.attributes, this.pluginContext.attributes],
+    ] as const) {
+      for (const name of pending.keys()) {
+        if (live.has(name) || (category === "commands" && builtins.find(name)) ||
+            (category === "shapes" && this.factory.hasType(name))) {
+          throw new Error(`duplicate registration: ${category}/${name}`);
+        }
+      }
+    }
+    for (const plugin of staged.commands.values()) this.registerCommandPlugin(plugin);
+    for (const provider of staged.shapes.values()) this.registerShapeProvider(provider);
+    for (const decorator of staged.decorators.values()) this.registerTreeDecorator(decorator);
+    for (const handler of staged.attributes.values()) this.pluginContext.registerAttribute(handler);
+  }
 
   private execute(command: ParsedCommand): string {
     const plugin = this.pluginCommands.get(command.name);

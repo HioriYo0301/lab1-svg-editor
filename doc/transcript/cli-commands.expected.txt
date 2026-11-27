@@ -1,0 +1,43 @@
+svg-editor 0.1 — type 'help' for commands
+[DIR]  docs
+[DIR]  plugins
+[FILE]  .hidden
+[FILE]  other.svg
+[FILE]  package.json
+canvas 800x600 created
+g#flow created
+rect#r1 created in g#flow
+circle#c1 created
+rect: 1  circle: 1  (total 2, containers 1)
+rect#r1 moved by (2,0)
+[DIR]  docs
+[DIR]  plugins
+[FILE]  .hidden
+[FILE]  other.svg
+[FILE]  package.json
+rect#r1 moved back by (-2,0)
+svg (800x600)
+├── g#flow *
+│   └── rect#r1 x=0 y=0 w=10 h=10 *
+└── circle#c1 cx=20 cy=20 r=3 *
+rect#r1 moved by (2,0)
+rect: 1  circle: 1  (total 2, containers 1)
+init [w] [h]
+read <file.svg>
+save [file.svg]
+canvas [w] [h]
+create <type> <id> [params...] [in <containerId>]
+delete <id>
+move <id> <dx> <dy>
+scale <id> <factor>
+set <id> <attr> <value>
+group <newGid> <id1> <id2>...
+ungroup <gid>
+addto <gid> <id>
+front/back <id>
+tree [id]
+show <id>
+undo
+redo
+stats
+dir

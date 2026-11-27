@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-26T06:13:45.236Z",
+  "generatedAt": "2026-11-27T03:02:04.026Z",
   "scope": "tracked source files; dependencies and build output excluded",
   "totals": {
-    "core": 1094,
-    "assembly": 381,
-    "plugin": 123,
+    "core": 1147,
+    "assembly": 436,
+    "plugin": 175,
     "vscode-extension": 105
   },
   "files": [
@@ -16,7 +16,7 @@
     {
       "file": "src/cli/CliApplication.ts",
       "category": "assembly",
-      "lines": 215
+      "lines": 268
     },
     {
       "file": "src/cli/CommandParser.ts",
@@ -156,7 +156,7 @@
     {
       "file": "src/main.ts",
       "category": "assembly",
-      "lines": 19
+      "lines": 21
     },
     {
       "file": "src/parser/.gitkeep",
@@ -166,12 +166,22 @@
     {
       "file": "src/parser/SvgReader.ts",
       "category": "core",
-      "lines": 111
+      "lines": 125
     },
     {
       "file": "src/plugins/AttributeHandler.ts",
       "category": "plugin",
       "lines": 6
+    },
+    {
+      "file": "src/plugins/BoxPlugin.ts",
+      "category": "plugin",
+      "lines": 27
+    },
+    {
+      "file": "src/plugins/BoxTypeDecorator.ts",
+      "category": "plugin",
+      "lines": 9
     },
     {
       "file": "src/plugins/CommandPlugin.ts",
@@ -184,6 +194,11 @@
       "lines": 25
     },
     {
+      "file": "src/plugins/ModifiedStarDecorator.ts",
+      "category": "plugin",
+      "lines": 12
+    },
+    {
       "file": "src/plugins/Plugin.ts",
       "category": "plugin",
       "lines": 6
@@ -191,7 +206,7 @@
     {
       "file": "src/plugins/PluginContext.ts",
       "category": "plugin",
-      "lines": 34
+      "lines": 38
     },
     {
       "file": "src/plugins/ShapeProvider.ts",
@@ -222,6 +237,11 @@
       "file": "src/shapes/.gitkeep",
       "category": "core",
       "lines": 2
+    },
+    {
+      "file": "src/shapes/Box.ts",
+      "category": "core",
+      "lines": 37
     },
     {
       "file": "src/shapes/Circle.ts",
@@ -261,7 +281,7 @@
     {
       "file": "src/shapes/ShapeFactory.ts",
       "category": "core",
-      "lines": 84
+      "lines": 86
     },
     {
       "file": "src/shapes/Text.ts",

@@ -5,6 +5,7 @@ coverage/
 *.log
 *.svg
 !vscode-extension/examples/**/*.svg
+!doc/transcript/*.svg
 vscode-extension/out/
 vscode-extension/.vscode-test/
 .env

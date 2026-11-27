@@ -5,6 +5,9 @@
   "type": "module",
   "scripts": {
     "cli": "tsx src/main.ts",
+    "cli:config": "tsx src/main.ts --config plugins.config.json",
+    "cli:base": "tsx src/main.ts --config plugins.disabled.config.json",
+    "verify:assembly": "node scripts/verify-assembly.mjs",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "metrics": "node scripts/metrics.mjs"

@@ -1,0 +1,14 @@
+# Fixed cwd, no output files written into it during this session.
+dir
+init 800 600
+create g flow
+create rect r1 0 0 10 10 in flow
+create circle c1 20 20 3
+stats
+move r1 2 0
+dir
+undo
+tree
+redo
+stats
+help

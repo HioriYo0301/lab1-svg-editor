@@ -1,0 +1,7 @@
+{
+  "name": "@svgframe/plugin-tree-star",
+  "private": true,
+  "type": "module",
+  "main": "index.ts",
+  "contributes": { "decorators": ["modified-star"] }
+}
